@@ -1,0 +1,35 @@
+import org.apache.hadoop.io.*;
+
+import java.io.*;
+import java.util.StringTokenizer;
+
+import javax.xml.soap.Text;
+public class ReceiptClass {
+	public static class ReceiptMapperClass extends Mapper<LongWritable,Text,Text,Text>{
+		public static void map(LonWritable key,Text value,Context context){
+			StringTokenizer st = new StringTokenizer(value.toString()," ");
+			String yearID = st.nextToken;
+			st.nextToken();
+			st.nextToken();
+			String delay = st.nextToken();
+			context.write(new Text("Summary"),new Text(yearID+""+delay));
+		}
+	}
+	
+	public static class ReceiptReducerClass extends Reducer<Text,Text,Text,FloatWritable>{
+		public static void reduce(Text key,Text value,Context context){
+			for(Text values : value){
+				String data = values.toString();
+				String[] dataArray = data.split("_");
+				Text tmpyear = new Text(dataArray[0]);
+				Long tmpdelay = new Long(dataArray[1]);
+				if(tmpdelay < min){
+					min = tmpdelay;
+					minyear=tmpyear;
+				}
+			}
+			
+		}
+	}
+
+}
